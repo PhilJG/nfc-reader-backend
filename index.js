@@ -18,14 +18,16 @@ app.get("/api/taps", (req, res) => {
 });
 
 // Endpoint to receive tap data
+// In your server's index.js
 app.post("/api/taps", (req, res) => {
   const tapData = {
     ...req.body,
-    timestamp: new Date().toISOString(),
+    timestamp: req.body.timestamp || new Date().toISOString(),
+    serverReceivedAt: new Date().toISOString(),
   };
 
-  tapHistory.unshift(tapData); // Add to beginning of array
-  if (tapHistory.length > 50) tapHistory.pop(); // Keep only last 50 taps
+  tapHistory.unshift(tapData);
+  if (tapHistory.length > 50) tapHistory.pop();
 
   console.log("Received tap:", tapData);
   res.status(201).json(tapData);
